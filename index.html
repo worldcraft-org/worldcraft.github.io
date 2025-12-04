@@ -1,11 +1,602 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>My Organization</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WorldCraft - Minecraft Image Gallery</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Press Start 2P', cursive;
+      background: linear-gradient(135deg, #87CEEB 0%, #98D8C8 50%, #7FB069 100%);
+      min-height: 100vh;
+      padding: 20px;
+      color: #2d2d2d;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Header Section */
+    header {
+      text-align: center;
+      padding: 30px 20px;
+      margin-bottom: 40px;
+      background: rgba(139, 90, 43, 0.9);
+      border: 8px solid #8B5A2B;
+      box-shadow: 
+        0 0 0 4px #654321,
+        0 8px 0 0 #5a3d1f,
+        inset 0 2px 4px rgba(0,0,0,0.3);
+      position: relative;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: -4px;
+      left: -4px;
+      right: -4px;
+      bottom: -4px;
+      background: repeating-linear-gradient(
+        45deg,
+        #8B5A2B,
+        #8B5A2B 10px,
+        #654321 10px,
+        #654321 20px
+      );
+      z-index: -1;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: #FFD700;
+      text-shadow: 
+        4px 4px 0px #8B5A2B,
+        8px 8px 0px #654321;
+      margin-bottom: 10px;
+      letter-spacing: 2px;
+    }
+
+    .subtitle {
+      font-size: 0.8rem;
+      color: #FFF;
+      text-shadow: 2px 2px 0px #654321;
+    }
+
+    /* Carousel Section */
+    .carousel-section {
+      margin-bottom: 50px;
+    }
+
+    .carousel-container {
+      position: relative;
+      background: rgba(139, 90, 43, 0.95);
+      border: 8px solid #8B5A2B;
+      box-shadow: 
+        0 0 0 4px #654321,
+        0 8px 0 0 #5a3d1f,
+        inset 0 2px 4px rgba(0,0,0,0.3);
+      padding: 20px;
+      margin-bottom: 30px;
+    }
+
+    .carousel-wrapper {
+      position: relative;
+      overflow: hidden;
+      background: #1a1a1a;
+      border: 4px solid #3a3a3a;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+    }
+
+    .carousel-slides {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+    }
+
+    .carousel-slide {
+      min-width: 100%;
+      position: relative;
+    }
+
+    .carousel-slide img {
+      width: 100%;
+      height: auto;
+      display: block;
+      image-rendering: pixelated;
+      image-rendering: -moz-crisp-edges;
+      image-rendering: crisp-edges;
+    }
+
+    .carousel-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(139, 90, 43, 0.95);
+      border: 4px solid #8B5A2B;
+      color: #FFD700;
+      font-size: 2rem;
+      width: 60px;
+      height: 60px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      transition: all 0.2s;
+      box-shadow: 
+        0 0 0 2px #654321,
+        0 4px 0 0 #5a3d1f;
+      user-select: none;
+    }
+
+    .carousel-nav:hover {
+      background: rgba(160, 110, 60, 0.95);
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    .carousel-nav:active {
+      transform: translateY(-50%) scale(0.95);
+      box-shadow: 
+        0 0 0 2px #654321,
+        0 2px 0 0 #5a3d1f;
+    }
+
+    .carousel-prev {
+      left: 10px;
+    }
+
+    .carousel-next {
+      right: 10px;
+    }
+
+    .carousel-indicators {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .indicator {
+      width: 16px;
+      height: 16px;
+      background: #8B5A2B;
+      border: 2px solid #654321;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 2px 0 0 #5a3d1f;
+    }
+
+    .indicator:hover {
+      background: #A66B3C;
+      transform: scale(1.2);
+    }
+
+    .indicator.active {
+      background: #FFD700;
+      border-color: #FFA500;
+      box-shadow: 0 2px 0 0 #FFA500;
+    }
+
+    /* Description Boxes */
+    .description-container {
+      background: rgba(139, 90, 43, 0.95);
+      border: 8px solid #8B5A2B;
+      box-shadow: 
+        0 0 0 4px #654321,
+        0 8px 0 0 #5a3d1f,
+        inset 0 2px 4px rgba(0,0,0,0.3);
+      padding: 25px;
+      margin-bottom: 30px;
+    }
+
+    .description-label {
+      font-size: 0.9rem;
+      color: #FFD700;
+      margin-bottom: 15px;
+      text-shadow: 2px 2px 0px #654321;
+    }
+
+    .description-box {
+      background: #2d2d2d;
+      border: 4px solid #3a3a3a;
+      padding: 20px;
+      color: #FFF;
+      font-size: 0.7rem;
+      line-height: 1.8;
+      min-height: 100px;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+      font-family: 'Courier New', monospace;
+      word-wrap: break-word;
+    }
+
+
+    /* GitHub Link Section */
+    .github-section {
+      background: rgba(139, 90, 43, 0.95);
+      border: 8px solid #8B5A2B;
+      box-shadow: 
+        0 0 0 4px #654321,
+        0 8px 0 0 #5a3d1f,
+        inset 0 2px 4px rgba(0,0,0,0.3);
+      padding: 30px;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .github-title {
+      font-size: 1.2rem;
+      color: #FFD700;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 0px #654321;
+    }
+
+    .github-link {
+      display: inline-block;
+      background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+      border: 6px solid #2E7D32;
+      padding: 20px 40px;
+      text-decoration: none;
+      color: #FFF;
+      font-size: 1rem;
+      transition: all 0.2s;
+      box-shadow: 
+        0 0 0 3px #1B5E20,
+        0 6px 0 0 #1B5E20;
+      position: relative;
+      text-shadow: 2px 2px 0px #1B5E20;
+    }
+
+    .github-link:hover {
+      background: linear-gradient(135deg, #5CBF60 0%, #4CAF50 100%);
+      transform: translateY(2px);
+      box-shadow: 
+        0 0 0 3px #1B5E20,
+        0 4px 0 0 #1B5E20;
+    }
+
+    .github-link:active {
+      transform: translateY(4px);
+      box-shadow: 
+        0 0 0 3px #1B5E20,
+        0 2px 0 0 #1B5E20;
+    }
+
+    .github-link::before {
+      content: '⚡';
+      margin-right: 10px;
+      font-size: 1.2rem;
+    }
+
+    /* GitHub Usage Description */
+    .github-usage-section {
+      background: rgba(139, 90, 43, 0.95);
+      border: 8px solid #8B5A2B;
+      box-shadow: 
+        0 0 0 4px #654321,
+        0 8px 0 0 #5a3d1f,
+        inset 0 2px 4px rgba(0,0,0,0.3);
+      padding: 25px;
+      margin-bottom: 30px;
+    }
+
+    .github-usage-title {
+      font-size: 1rem;
+      color: #FFD700;
+      margin-bottom: 15px;
+      text-shadow: 2px 2px 0px #654321;
+    }
+
+    .github-usage-box {
+      background: #2d2d2d;
+      border: 4px solid #3a3a3a;
+      padding: 20px;
+      color: #FFF;
+      font-size: 0.7rem;
+      line-height: 1.8;
+      min-height: 100px;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+      font-family: 'Courier New', monospace;
+      word-wrap: break-word;
+    }
+
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      .subtitle {
+        font-size: 0.6rem;
+      }
+
+      .carousel-nav {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+      }
+
+      .github-link {
+        padding: 15px 30px;
+        font-size: 0.8rem;
+      }
+
+      .description-box,
+      .github-usage-box {
+        font-size: 0.6rem;
+      }
+    }
+
+    /* Pixelated effect for images */
+    img {
+      image-rendering: pixelated;
+      image-rendering: -moz-crisp-edges;
+      image-rendering: crisp-edges;
+    }
+  </style>
 </head>
 <body>
-  <h1>Welcome to Our Organization</h1>
-  <p>This is the homepage hosted on GitHub Pages.</p>
+  <div class="container">
+    <!-- Header Section -->
+    <header>
+      <h1>WORLDCRAFT</h1>
+      <p class="subtitle">Minecraft Image Gallery</p>
+    </header>
+
+    <!-- Carousel Section -->
+    <section class="carousel-section">
+      <div class="carousel-container">
+        <div class="carousel-wrapper">
+          <div class="carousel-slides" id="carouselSlides">
+            <!-- Image slides will be added here -->
+            <!-- Example structure for each slide:
+            <div class="carousel-slide" data-slide-index="0">
+              <img src="path/to/image.jpg" alt="Image description">
+            </div>
+            -->
+          </div>
+          <button class="carousel-nav carousel-prev" id="prevBtn" aria-label="Previous image">‹</button>
+          <button class="carousel-nav carousel-next" id="nextBtn" aria-label="Next image">›</button>
+        </div>
+        <div class="carousel-indicators" id="carouselIndicators">
+          <!-- Indicators will be generated by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Description Box for Current Image -->
+      <div class="description-container">
+        <div class="description-label">IMAGE DESCRIPTION</div>
+        <div class="description-box" id="imageDescription" data-description-index="0">
+          <!-- Description text will be added here -->
+          <!-- You can edit this text directly in the code -->
+        </div>
+      </div>
+    </section>
+
+    <!-- GitHub Link Section -->
+    <section class="github-section">
+      <div class="github-title">CHECK OUT OUR GITHUB REPOSITORY</div>
+      <a href="https://github.com/worldcraft-org/worldcraft" 
+         target="_blank" 
+         rel="noopener noreferrer" 
+         class="github-link"
+         id="githubLink">
+        Visit WorldCraft on GitHub
+      </a>
+    </section>
+
+    <!-- GitHub Usage Description Section -->
+    <section class="github-usage-section">
+      <div class="github-usage-title">HOW TO USE THE GITHUB REPOSITORY</div>
+      <div class="github-usage-box" id="githubUsageDescription">
+        <!-- Instructions on how to use the GitHub repository will be added here -->
+        <!-- You can edit this text directly in the code -->
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // Carousel functionality
+    class MinecraftCarousel {
+      constructor() {
+        this.currentSlide = 0;
+        this.slides = [];
+        this.descriptions = [];
+        this.init();
+      }
+
+      init() {
+        // Get DOM elements
+        this.slidesContainer = document.getElementById('carouselSlides');
+        this.indicatorsContainer = document.getElementById('carouselIndicators');
+        this.descriptionBox = document.getElementById('imageDescription');
+        this.prevBtn = document.getElementById('prevBtn');
+        this.nextBtn = document.getElementById('nextBtn');
+
+        // Load slides from data attributes or create placeholder
+        this.loadSlides();
+
+        // Set up event listeners
+        this.prevBtn.addEventListener('click', () => this.prevSlide());
+        this.nextBtn.addEventListener('click', () => this.nextSlide());
+
+        // Touch/swipe support
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        this.slidesContainer.addEventListener('touchstart', (e) => {
+          touchStartX = e.changedTouches[0].screenX;
+        });
+
+        this.slidesContainer.addEventListener('touchend', (e) => {
+          touchEndX = e.changedTouches[0].screenX;
+          this.handleSwipe(touchStartX, touchEndX);
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'ArrowLeft') this.prevSlide();
+          if (e.key === 'ArrowRight') this.nextSlide();
+        });
+      }
+
+      loadSlides() {
+        // Get all slide elements
+        const slideElements = this.slidesContainer.querySelectorAll('.carousel-slide');
+        
+        if (slideElements.length === 0) {
+          // Create placeholder if no slides exist
+          this.createPlaceholderSlide();
+        } else {
+          slideElements.forEach((slide, index) => {
+            this.slides.push(slide);
+            // Get description from data attribute or use default
+            const description = slide.getAttribute('data-description') || 
+                               this.descriptionBox.textContent || 
+                               'Description will be added here';
+            this.descriptions.push(description);
+          });
+        }
+
+        this.updateIndicators();
+        this.updateDisplay();
+      }
+
+      createPlaceholderSlide() {
+        // Create a placeholder slide for when images are added later
+        const placeholder = document.createElement('div');
+        placeholder.className = 'carousel-slide';
+        placeholder.setAttribute('data-slide-index', '0');
+        placeholder.innerHTML = `
+          <div style="
+            width: 100%;
+            height: 400px;
+            background: repeating-linear-gradient(
+              45deg,
+              #3a3a3a,
+              #3a3a3a 20px,
+              #2d2d2d 20px,
+              #2d2d2d 40px
+            );
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8B5A2B;
+            font-size: 1rem;
+            text-align: center;
+            padding: 20px;
+          ">
+            <div>
+              <div style="font-size: 3rem; margin-bottom: 20px;">📦</div>
+              <div>Image placeholder - Add your images here</div>
+            </div>
+          </div>
+        `;
+        this.slidesContainer.appendChild(placeholder);
+        this.slides.push(placeholder);
+        this.descriptions.push('Add description for this image here');
+      }
+
+      updateIndicators() {
+        this.indicatorsContainer.innerHTML = '';
+        this.slides.forEach((_, index) => {
+          const indicator = document.createElement('div');
+          indicator.className = `indicator ${index === this.currentSlide ? 'active' : ''}`;
+          indicator.setAttribute('data-slide', index);
+          indicator.addEventListener('click', () => this.goToSlide(index));
+          this.indicatorsContainer.appendChild(indicator);
+        });
+      }
+
+      updateDisplay() {
+        // Move slides
+        const translateX = -this.currentSlide * 100;
+        this.slidesContainer.style.transform = `translateX(${translateX}%)`;
+
+        // Update indicators
+        this.updateIndicators();
+
+        // Update description
+        if (this.descriptions[this.currentSlide]) {
+          this.descriptionBox.textContent = this.descriptions[this.currentSlide];
+          this.descriptionBox.setAttribute('data-description-index', this.currentSlide);
+        }
+
+        // Update button states
+        this.prevBtn.style.opacity = this.currentSlide === 0 ? '0.5' : '1';
+        this.nextBtn.style.opacity = this.currentSlide === this.slides.length - 1 ? '0.5' : '1';
+      }
+
+      nextSlide() {
+        if (this.currentSlide < this.slides.length - 1) {
+          this.currentSlide++;
+          this.updateDisplay();
+        }
+      }
+
+      prevSlide() {
+        if (this.currentSlide > 0) {
+          this.currentSlide--;
+          this.updateDisplay();
+        }
+      }
+
+      goToSlide(index) {
+        if (index >= 0 && index < this.slides.length) {
+          this.currentSlide = index;
+          this.updateDisplay();
+        }
+      }
+
+      handleSwipe(startX, endX) {
+        const swipeThreshold = 50;
+        const diff = startX - endX;
+
+        if (Math.abs(diff) > swipeThreshold) {
+          if (diff > 0) {
+            this.nextSlide();
+          } else {
+            this.prevSlide();
+          }
+        }
+      }
+
+      // Method to add slides programmatically
+      addSlide(imageSrc, description = '') {
+        const slide = document.createElement('div');
+        slide.className = 'carousel-slide';
+        slide.setAttribute('data-slide-index', this.slides.length);
+        slide.setAttribute('data-description', description);
+        
+        const img = document.createElement('img');
+        img.src = imageSrc;
+        img.alt = description || `Image ${this.slides.length + 1}`;
+        slide.appendChild(img);
+
+        this.slidesContainer.appendChild(slide);
+        this.slides.push(slide);
+        this.descriptions.push(description);
+        this.updateIndicators();
+      }
+    }
+
+    // Initialize carousel when DOM is ready
+    document.addEventListener('DOMContentLoaded', () => {
+      window.minecraftCarousel = new MinecraftCarousel();
+    });
+
+  </script>
 </body>
 </html>
