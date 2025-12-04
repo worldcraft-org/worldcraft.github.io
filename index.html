@@ -97,6 +97,10 @@
       background: #1a1a1a;
       border: 4px solid #3a3a3a;
       box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+      min-height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .carousel-slides {
@@ -107,15 +111,130 @@
     .carousel-slide {
       min-width: 100%;
       position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 400px;
     }
 
     .carousel-slide img {
-      width: 100%;
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
       height: auto;
+      display: block;
+      object-fit: contain;
+      image-rendering: pixelated;
+      image-rendering: -moz-crisp-edges;
+      image-rendering: crisp-edges;
+    }
+
+    /* Before/After Slider Styles */
+    .image-comparison-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .image-comparison-wrapper {
+      position: relative;
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    .comparison-image {
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      display: block;
+      object-fit: contain;
+      image-rendering: pixelated;
+      image-rendering: -moz-crisp-edges;
+      image-rendering: crisp-edges;
+    }
+
+    .comparison-image-base {
+      position: relative;
+    }
+
+    .comparison-image-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      overflow: hidden;
+      width: 50%;
+      height: 100%;
+      transition: width 0.1s ease;
+    }
+
+    .comparison-image-overlay img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
       display: block;
       image-rendering: pixelated;
       image-rendering: -moz-crisp-edges;
       image-rendering: crisp-edges;
+    }
+
+    .comparison-slider {
+      position: absolute;
+      bottom: 20px;
+      left: 10%;
+      width: 80%;
+      height: 8px;
+      background: rgba(139, 90, 43, 0.9);
+      border: 3px solid #8B5A2B;
+      cursor: pointer;
+      z-index: 10;
+      box-shadow: 
+        0 0 0 2px #654321,
+        0 4px 0 0 #5a3d1f,
+        inset 0 0 10px rgba(0,0,0,0.5);
+      border-radius: 4px;
+    }
+
+    .comparison-slider::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: var(--slider-position, 50%);
+      transform: translate(-50%, -50%);
+      width: 30px;
+      height: 30px;
+      background: #FFD700;
+      border: 4px solid #8B5A2B;
+      border-radius: 50%;
+      box-shadow: 
+        0 0 0 2px #654321,
+        0 4px 0 0 #5a3d1f;
+      cursor: grab;
+      transition: left 0.1s ease;
+    }
+
+    .comparison-slider:active::before {
+      cursor: grabbing;
+    }
+
+    .comparison-slider-label {
+      position: absolute;
+      bottom: 35px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(139, 90, 43, 0.95);
+      border: 3px solid #8B5A2B;
+      padding: 5px 10px;
+      color: #FFD700;
+      font-size: 0.6rem;
+      white-space: nowrap;
+      box-shadow: 
+        0 0 0 2px #654321,
+        0 4px 0 0 #5a3d1f;
+      pointer-events: none;
     }
 
     .carousel-nav {
@@ -213,7 +332,7 @@
       border: 4px solid #3a3a3a;
       padding: 20px;
       color: #FFF;
-      font-size: 0.7rem;
+      font-size: 1rem;
       line-height: 1.8;
       min-height: 100px;
       box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
@@ -335,7 +454,7 @@
 
       .description-box,
       .github-usage-box {
-        font-size: 0.6rem;
+        font-size: 0.8rem;
       }
     }
 
@@ -361,23 +480,35 @@
         <div class="carousel-wrapper">
           <div class="carousel-slides" id="carouselSlides">
             <!-- Image Processing (Slide 1) -->
-            <div class="carousel-slide" data-slide-index="0" data-description="Description for Image Processing will be added here">
-              <img src="images/image-processing.jpg" alt="Image Processing">
+            <div class="carousel-slide" data-slide-index="0" data-description="Extracted semantics from image in grayscale, with each pixel representing their respective semantic class ID">
+              <div class="image-comparison-container">
+                <div class="image-comparison-wrapper" id="imageComparisonWrapper">
+                  <div class="comparison-image-base">
+                    <img src="images/image-processing2.png" alt="Image Processing - Grayed" class="comparison-image">
+                  </div>
+                  <div class="comparison-image-overlay" id="comparisonOverlay">
+                    <img src="images/image-processing1.png" alt="Image Processing - Original" class="comparison-image">
+                  </div>
+                  <div class="comparison-slider" id="comparisonSlider">
+                    <div class="comparison-slider-label">Drag to compare</div>
+                  </div>
+                </div>
+              </div>
             </div>
             
             <!-- Semantic Nerf (Slide 2) -->
-            <div class="carousel-slide" data-slide-index="1" data-description="Description for Semantic Nerf will be added here">
-              <img src="images/semantic-nerf.jpg" alt="Semantic Nerf">
+            <div class="carousel-slide" data-slide-index="1" data-description="Nerfstudio viewer during NeRF model training">
+              <img src="images/semantic-nerf.png" alt="Semantic Nerf">
             </div>
             
             <!-- Voxelation (Slide 3) -->
-            <div class="carousel-slide" data-slide-index="2" data-description="side view of a 3D voxel grid representing the point cloud data from the semantic nerf team">
-              <img src="images/voxelation.jpg" alt="Voxelation">
+            <div class="carousel-slide" data-slide-index="2" data-description="Side view of a 3D voxel grid representing the point cloud data from the semantic nerf team">
+              <img src="images/voxelation.png" alt="Voxelation">
             </div>
             
             <!-- Export (Slide 4) -->
-            <div class="carousel-slide" data-slide-index="3" data-description="Description for Export will be added here">
-              <img src="images/export.jpg" alt="Export">
+            <div class="carousel-slide" data-slide-index="3" data-description="You can paste this litematica file in ANY Minecraft world, ANY number of times, ANY location">
+              <img src="images/export.png" alt="Export">
             </div>
           </div>
           <button class="carousel-nav carousel-prev" id="prevBtn" aria-label="Previous image">‹</button>
@@ -608,7 +739,89 @@
     // Initialize carousel when DOM is ready
     document.addEventListener('DOMContentLoaded', () => {
       window.minecraftCarousel = new MinecraftCarousel();
+      initImageComparison();
     });
+
+    // Image Comparison Slider Functionality
+    function initImageComparison() {
+      const slider = document.getElementById('comparisonSlider');
+      const overlay = document.getElementById('comparisonOverlay');
+      const wrapper = document.getElementById('imageComparisonWrapper');
+      
+      if (!slider || !overlay || !wrapper) return;
+
+      let isDragging = false;
+      let startX = 0;
+      let startPosition = 50; // Start at 50% (middle)
+
+      function updateSliderPosition(percentage) {
+        percentage = Math.max(0, Math.min(100, percentage));
+        // Update the handle position within the slider track
+        slider.style.setProperty('--slider-position', percentage + '%');
+        const handle = slider.querySelector('::before') || slider;
+        overlay.style.width = percentage + '%';
+      }
+
+      // Mouse events - click on slider track
+      slider.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        const rect = slider.getBoundingClientRect();
+        const sliderTrackLeft = rect.left;
+        const sliderTrackWidth = rect.width;
+        const percentage = ((e.clientX - sliderTrackLeft) / sliderTrackWidth) * 100;
+        updateSliderPosition(percentage);
+        e.preventDefault();
+      });
+
+      document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        const rect = slider.getBoundingClientRect();
+        const sliderTrackLeft = rect.left;
+        const sliderTrackWidth = rect.width;
+        const percentage = ((e.clientX - sliderTrackLeft) / sliderTrackWidth) * 100;
+        updateSliderPosition(percentage);
+      });
+
+      document.addEventListener('mouseup', () => {
+        isDragging = false;
+      });
+
+      // Touch events for mobile
+      slider.addEventListener('touchstart', (e) => {
+        isDragging = true;
+        const rect = slider.getBoundingClientRect();
+        const sliderTrackLeft = rect.left;
+        const sliderTrackWidth = rect.width;
+        const percentage = ((e.touches[0].clientX - sliderTrackLeft) / sliderTrackWidth) * 100;
+        updateSliderPosition(percentage);
+        e.preventDefault();
+      });
+
+      document.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        const rect = slider.getBoundingClientRect();
+        const sliderTrackLeft = rect.left;
+        const sliderTrackWidth = rect.width;
+        const percentage = ((e.touches[0].clientX - sliderTrackLeft) / sliderTrackWidth) * 100;
+        updateSliderPosition(percentage);
+        e.preventDefault();
+      });
+
+      document.addEventListener('touchend', () => {
+        isDragging = false;
+      });
+
+      // Click on wrapper to move slider
+      wrapper.addEventListener('click', (e) => {
+        if (e.target === slider || slider.contains(e.target)) return;
+        const rect = wrapper.getBoundingClientRect();
+        const percentage = ((e.clientX - rect.left) / rect.width) * 100;
+        updateSliderPosition(percentage);
+      });
+
+      // Initialize at 50%
+      updateSliderPosition(50);
+    }
 
   </script>
 </body>
